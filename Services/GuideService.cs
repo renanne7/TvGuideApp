@@ -4,26 +4,26 @@ using System.Globalization;
 
 namespace TvGuideApp.Services;
 
-public static class GuideService
+public class GuideService
 {
-    static HttpClient client = new HttpClient();
-    static string SingleSearchPath = "https://api.tvmaze.com/singlesearch/shows?q=";
-    static string MultiSearchPath ="https://api.tvmaze.com/search/shows?q=";
-    static string ShowsPlayingToday = "https://api.tvmaze.com/schedule?country=GB&date=";
+    private static HttpClient client = new HttpClient();
+    private static string SingleSearchPath = "https://api.tvmaze.com/singlesearch/shows?q=";
+    private static string MultiSearchPath ="https://api.tvmaze.com/search/shows?q=";
+    private static string ShowsPlayingToday = "https://api.tvmaze.com/schedule?country=GB&date=";
 
-    static async Task<Guide> GetJsonAsync(string path)
+    private static async Task<Guide> GetJsonAsync(string path)
     {
         string ShowsJson = await client.GetStringAsync(path);   
         var tvShowData = JsonConvert.DeserializeObject<Guide>(ShowsJson);
         return tvShowData;
     }
-    static async Task<IEnumerable<Guide>> GetJsonMultiAsync(string path)
+    private static async Task<IEnumerable<Guide>> GetJsonMultiAsync(string path)
     {
         string ShowsJson = await client.GetStringAsync(path);   
         var tvShowData = JsonConvert.DeserializeObject<IEnumerable<Guide>>(ShowsJson);
         return tvShowData;
     }
-    static string GetTodayDate()
+    private static string GetTodayDate()
     {
         DateTime utcDate = DateTime.UtcNow;
         String cultureNames = "en-GB";
@@ -57,16 +57,11 @@ public static class GuideService
         List<string> AvailableWebChannels = new List<string>();
         foreach (var eachshow in tvShowData)
         {
-            if(eachshow.Show != null)
+            if(eachshow.Show is not null && eachshow.Show.WebChannel is not null && eachshow.Show.WebChannel.Name is not null)
             {
-                if(eachshow.Show.WebChannel != null)
-                {
-                    if(eachshow.Show.WebChannel.Name != null)
-                    {
-                        AvailableWebChannels.Add(eachshow.Show.WebChannel.Name);
-                    }
-                }
+                AvailableWebChannels.Add(eachshow.Show.WebChannel.Name);
             }
+
         }
         IEnumerable<string> DistinctWebChannels = AvailableWebChannels.Select(x => x).Distinct();
         return DistinctWebChannels;

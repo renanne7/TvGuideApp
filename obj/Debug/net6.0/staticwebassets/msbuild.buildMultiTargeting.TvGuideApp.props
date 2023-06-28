@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TvGuideApp.props" />
+</Project>
