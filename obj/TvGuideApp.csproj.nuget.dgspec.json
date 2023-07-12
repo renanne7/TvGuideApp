@@ -49,9 +49,17 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
+            "OpenTelemetry.Exporter.Prometheus.AspNetCore": {
+              "target": "Package",
+              "version": "[1.5.0-rc.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
+            },
+            "System.Text.Encoding.CodePages": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             }
           },
           "imports": [
