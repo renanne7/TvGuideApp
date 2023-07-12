@@ -8,10 +8,17 @@ namespace TvGuideApp.Controllers;
 [Route("[controller]")]
 public class GuideController : ControllerBase
 {
+    private readonly IMyDependency _myDependency;
+
+    public GuideController(IMyDependency myDependency)
+    {
+        _myDependency = myDependency;            
+    }
+
     [HttpGet("singlesearch/{name}")]
     public async Task<ActionResult<Guide>> GetShow(string name) 
     {
-        Guide guide = await GuideService.GetShow(name);
+        Guide guide = await _myDependency.GetShow(name);
 
         if (guide == null) 
             return NotFound();
@@ -22,7 +29,7 @@ public class GuideController : ControllerBase
     [HttpGet("multisearch/{name}")]
     public async Task<ActionResult<IEnumerable<Guide>>> GetShows(string name) 
     {
-        IEnumerable<Guide> guide = await GuideService.GetShows(name);
+        IEnumerable<Guide> guide = await _myDependency.GetShows(name);
 
         if (guide == null) 
             return NotFound();
@@ -33,7 +40,7 @@ public class GuideController : ControllerBase
     [HttpGet("playingnow")]
     public async Task<ActionResult<IEnumerable<Guide>>> PlayingNow() 
     {
-        IEnumerable<Guide> guide = await GuideService.PlayingNow();
+        IEnumerable<Guide> guide = await _myDependency.PlayingNow();
 
         if (guide == null) 
             return NotFound();
@@ -44,18 +51,18 @@ public class GuideController : ControllerBase
     [HttpGet("channels")]
     public async Task<ActionResult<IEnumerable<Guide>>> ChannelList() 
     {
-        IEnumerable<string> guide = await GuideService.ChannelList();
+        IEnumerable<string> guide = await _myDependency.ChannelList();
 
         if (guide == null) 
             return NotFound();
 
         return Ok(guide);    
     }
-
+    
     [HttpGet("channels/{Channelname}")]
     public async Task<ActionResult<IEnumerable<Guide>>> ShowsInChannel(string Channelname) 
     {
-        IEnumerable<Guide> guide = await GuideService.ShowsInChannel(Channelname);
+        IEnumerable<Guide> guide = await _myDependency.ShowsInChannel(Channelname);
 
         if (guide == null) 
             return NotFound();

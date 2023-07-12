@@ -1,3 +1,5 @@
+using TvGuideApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IMyDependency, GuideService>();
+
+builder.Services.AddHttpClient("tvmaze", httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://api.tvmaze.com/");
+});
 
 var app = builder.Build();
 
